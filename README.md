@@ -392,7 +392,7 @@ Attachments are experimental. OpenAI-compatible APIs do not standardize file, im
 Attachments are included on the next user turn and then cleared after the turn.
 Relative attachment paths resolve from Maestro's file directory, which starts beside your active settings file. Use `/pwd` to show it, `/cd` to change it, `/cd -` to return to the previous folder, and `/ls` to inspect files before attaching them.
 You can detach by full path, relative path, or by file name. Attachments are limited to 25 MB each.
-Supported types: `png`, `jpg`, `jpeg`, `gif`, `mp3`, `wav`, `pdf`, `doc`, `docx`, and `txt`.
+Supported types: `png`, `jpg`, `jpeg`, `gif`, `mp3`, `wav`, `pdf`, `doc`, `docx`, `txt`, `md`, `markdown`, `csv`, `json`, and `log`.
 
 Maestro chooses one delivery mode for all active recipients. It sends native attachment parts only when active model capabilities allow it, falls back to shared text context when equivalent text can be extracted, and blocks the turn when the attachment cannot be shared fairly across active models.
 
