@@ -8,15 +8,15 @@ K Means AI Maestro™ is the terminal-based multi-LLM collaboration app in the K
 
 Maestro is lightweight, portable, and provider-agnostic. It runs from a local terminal, supports OpenAI, OpenAI-compatible, Anthropic, and Google Gemini chat providers, keeps orchestration logic outside the providers, and can operate in environments where browser-based workflows, hosted control planes, or heavyweight collaboration suites are not a good fit.
 
-Use it when you need several independent reasoning passes over the same material, a durable transcript of how conclusions were reached, or a repeatable command-line workflow for analysis, review, planning, incident response, product strategy, policy exploration, or mission-sensitive decision support.
+Use Maestro when you need several independent reasoning passes over the same material, a durable transcript of how conclusions were reached, or a repeatable command-line workflow for analysis, review, planning, incident response, product strategy, policy exploration, or mission-sensitive decision support.
 
 Learn more at [kmeans.ai](https://kmeans.ai).
 
-The source code is maintained separately. This repository is intended for users who want to download and run Maestro without cloning or building the private source repository.
+The source code is maintained separately. This repository is intended for users who want to download and run Maestro without cloning or building the private source repository. Keep credentials, private configuration, and local transcripts out of this public repository.
 
 ## License Notice
 
-K Means AI Maestro is proprietary software.
+K Means AI Maestro™ is proprietary software.
 
 Copyright (C) K MEANS AI LLC. All rights reserved.
 
@@ -38,7 +38,7 @@ Integrators are designed to function as unbiased observers. They do not actively
 
 ## Download
 
-Use the archive that matches your operating system and CPU architecture. The easiest path is to download the latest archive from this repository's GitHub Releases page.
+Use the archive that matches your operating system and CPU architecture. Download the latest archive from this repository's GitHub Releases page.
 
 Recommended archive names:
 
@@ -49,7 +49,7 @@ maestro-linux-x64.zip
 maestro-win-x64.zip
 ```
 
-Each archive includes the Maestro executable and required runtime assets:
+Each archive includes the Maestro executable and the required runtime assets:
 
 ```text
 maestro executable
@@ -64,8 +64,8 @@ README.md
 
 1. Download the release archive for your system.
 2. Extract the archive to a local folder.
-3. Open `symphony.settings.json` and configure your model endpoints and credentials.
-4. Set any environment variables referenced by `env:...` credentials.
+3. Open `symphony.settings.json` and configure your model providers, endpoints, and credentials.
+4. Set any environment variables referenced by `env:...` credentials. Environment variables are recommended for API keys.
 5. Run the `maestro` executable from the extracted folder.
 
 macOS/Linux:
@@ -86,11 +86,11 @@ You can also point Maestro at a specific settings file:
 ./maestro --config path/to/symphony.settings.json
 ```
 
-Keep `PromptTemplates/`, telemetry settings, and other bundled artifacts beside the executable unless you are intentionally using `--config` with another settings folder.
+Keep `PromptTemplates/`, telemetry settings, and other bundled artifacts beside the executable unless you intentionally use `--config` with another settings folder.
 
 ## Verify Downloads
 
-When checksums are provided, compare the downloaded archive against the matching checksum in `checksums/` before running it.
+When checksums are provided, compare the downloaded archive against the matching checksum in `checksums/` before running Maestro.
 
 macOS/Linux example:
 
@@ -106,7 +106,7 @@ Get-FileHash .\maestro-win-x64.zip -Algorithm SHA256
 
 ## Configuration
 
-Maestro uses `symphony.settings.json` to define model participants, integrators, prompts, colors, startup input, and CLI behavior.
+Maestro uses `symphony.settings.json` to define model participants, integrators, providers, prompts, colors, startup input, and CLI behavior.
 
 The `Models` array has two groups:
 
@@ -198,13 +198,22 @@ The shortcut prefix is case-insensitive, so `ENV:OPENAI`, `env:OPENAI`, `KEY:...
 - `Capabilities.Attachments`: Native attachment capability for this model: `supported`, `partial`, `experimental`, or `unsupported`.
 - `ChatColor`: RGB terminal color string.
 
-Prompt files are resolved from the app's `PromptTemplates` folder when using `file:name`.
+Provider guidance:
+
+| Provider | Use for |
+| --- | --- |
+| `OpenAI` | OpenAI API models. |
+| `OpenAICompatible` | OpenAI-compatible endpoints such as Azure OpenAI-compatible deployments or other compatible gateways. |
+| `Anthropic` | Anthropic Claude models through the native Anthropic provider path. |
+| `GoogleGemini` | Google Gemini models through the native Gemini provider path. |
+
+Prompt files are resolved from Maestro's `PromptTemplates` folder when using `file:name`.
 
 At startup, Maestro runs a live preflight for participating chat models before showing the prompt. Models that fail startup are paused with a clear error. If an enabled integrator fails, normal member chat still starts, but integrator-only features such as synthesis, compaction, and admin mode remain unavailable until an integrator is enabled successfully.
 
 ## Prompt Templates
 
-Prompt templates are critical runtime files. You can edit them, but changes can significantly alter model behavior or break the app's expected protocol. Keep backup copies before experimenting.
+Prompt templates are critical runtime files. You can edit them, but changes can significantly alter model behavior or break Maestro's expected protocol. Keep backup copies before experimenting.
 
 ## Integrators
 
@@ -230,7 +239,7 @@ List integrators:
 
 ## Basic Use
 
-Type a normal message and press Enter. Active regular models will respond in sequence.
+Type a message and press Enter. Active regular models respond in sequence, and Markdown-formatted output is rendered directly in the console.
 
 You can mention models by alias in your messages:
 
@@ -264,13 +273,13 @@ Typing `...` expands to `continue`.
 
 ## URL Handling
 
-Maestro does not fetch webpage content from URLs automatically. Chat providers usually treat URLs as plain text, so reliable retrieval should be handled by Maestro middleware before content is injected into model context. Until that middleware is available, paste the relevant page text or attach a local extracted document.
+Maestro does not fetch webpage content from URLs automatically. Chat providers usually treat URLs as plain text, so for reliable analysis you should paste the relevant page text or attach a local extracted document.
 
 ## Commands
 
 Commands start with `/`.
 
-Use `/help` inside the app to see commands grouped by area. Use `/doctor` to check configuration, telemetry, model state, compaction settings, attachments, and artifacts.
+Use `/help` inside Maestro to see commands grouped by area. Use `/doctor` to check configuration, telemetry, model state, compaction settings, attachments, and artifacts.
 In interactive sessions, use the up and down arrow keys to move through recent input history.
 
 ### Model Commands
@@ -393,7 +402,7 @@ Attachments are experimental. Chat providers do not standardize file, image, aud
 ```
 
 Attachments are included on the next user turn and then cleared after the turn.
-Relative attachment paths resolve from Maestro's file directory, which starts beside your active settings file. Use `/pwd` to show it, `/cd` to change it, `/cd -` to return to the previous folder, and `/ls` to inspect files before attaching them.
+Relative attachment paths resolve from Maestro's file directory, which starts beside your active settings file. Use `/pwd` to show the current directory, `/cd` to change it, `/cd -` to return to the previous folder, and `/ls` to inspect files before attaching them.
 You can detach by full path, relative path, or by file name. Attachments are limited to 25 MB each.
 Supported types: `png`, `jpg`, `jpeg`, `gif`, `mp3`, `wav`, `pdf`, `doc`, `docx`, `txt`, `md`, `markdown`, `csv`, `json`, and `log`.
 
@@ -452,7 +461,7 @@ For long sessions, enable an integrator and turn on auto compaction:
 /compact auto on
 ```
 
-The app warns when model histories are growing large. Auto compaction runs after user turns when histories exceed the configured threshold.
+Maestro warns when model histories are growing large. Auto compaction runs after user turns when histories exceed the configured threshold.
 
 Useful defaults:
 
@@ -473,7 +482,7 @@ The `Input` setting can point to a plain-text file and run it as an automated Ma
 
 Each non-empty line is typed into Maestro as if a user entered it at the prompt. Input files can mix regular chat turns with slash commands, so they are useful for repeatable setup, scripted analysis, demos, training runs, evaluations, regression checks, or any workflow where you want the same multi-model session to run consistently.
 
-Maestro can use this subsystem for guided runs, but it is a practical product feature on its own. A script can enable or disable models, switch modes, assign roles, attach context, navigate folders, load artifacts, run synthesis, export results, and then exit when the final scripted line completes.
+Maestro uses this subsystem for guided demos, but it is also a practical automation feature. A script can enable or disable models, switch modes, assign roles, attach context, navigate folders, load artifacts, run synthesis, export results, and then exit when the final scripted line completes.
 
 Typing speed for scripted input is controlled by `KeyRate` and `KeyDelay` in `symphony.settings.json`. `KeyRate` is the base per-character rhythm, while Maestro adds proportional pauses around spaces, punctuation, symbols, and sentence boundaries so automated sessions still feel readable and natural.
 
@@ -529,7 +538,7 @@ If Maestro cannot start, first check:
 - Model names, endpoints, and credentials match your provider.
 - At least one chat model is enabled.
 
-For command help inside the app, run:
+For command help inside Maestro, run:
 
 ```text
 /help
@@ -537,4 +546,4 @@ For command help inside the app, run:
 
 ## Notes
 
-This app is intended for local, terminal-based multi-model workflows. Be careful with sensitive data: prompts, attached files, stashed sessions, generated exports, and conversation content may contain information that is sent to whichever model providers you configure.
+Maestro is intended for local, terminal-based multi-model workflows. Be careful with sensitive data: prompts, attached files, stashed sessions, generated exports, and conversation content may contain information that is sent to whichever model providers you configure.
