@@ -1,22 +1,22 @@
-![Symphony Maestro™](docs/images/maestro.png)
+![K Means AI Maestro™](docs/images/maestro.png)
 
-# Symphony Maestro™ Releases
+# K Means AI Maestro™ Releases
 
-Public download repository for Symphony Maestro™ binaries, release notes, checksums, and user-facing setup documentation.
+Public download repository for K Means AI Maestro™ binaries, release notes, checksums, and user-facing setup documentation.
 
-Symphony Maestro™ is the terminal-based multi-LLM collaboration app in the K Means AI Symphony™ suite. It lets you run a shared conversation across several language models, compare their responses, assign roles, preserve useful context, and use an optional integrator model to summarize, synthesize, vote, and compact long-running chats.
+K Means AI Maestro™ is the terminal-based multi-LLM collaboration app in the K Means AI Symphony™ suite. It lets you run a shared conversation across several language models, compare their responses, assign roles, preserve useful context, and use an optional integrator model to summarize, synthesize, vote, and compact long-running chats.
 
-Maestro is lightweight, portable, and provider-agnostic. It runs from a local terminal, uses OpenAI-compatible endpoints, keeps orchestration logic outside the providers, and can operate in environments where browser-based workflows, hosted control planes, or heavyweight collaboration suites are not a good fit.
+Maestro is lightweight, portable, and provider-agnostic. It runs from a local terminal, supports OpenAI, OpenAI-compatible, Anthropic, and Google Gemini chat providers, keeps orchestration logic outside the providers, and can operate in environments where browser-based workflows, hosted control planes, or heavyweight collaboration suites are not a good fit.
 
 Use it when you need several independent reasoning passes over the same material, a durable transcript of how conclusions were reached, or a repeatable command-line workflow for analysis, review, planning, incident response, product strategy, policy exploration, or mission-sensitive decision support.
 
 Learn more at [kmeans.ai](https://kmeans.ai).
 
-The source code is maintained separately. This repository is intended for users who want to download and run Symphony Maestro without cloning or building the private source repository.
+The source code is maintained separately. This repository is intended for users who want to download and run Maestro without cloning or building the private source repository.
 
 ## License Notice
 
-Symphony Maestro is proprietary software.
+K Means AI Maestro is proprietary software.
 
 Copyright (C) K MEANS AI LLC. All rights reserved.
 
@@ -49,7 +49,7 @@ maestro-linux-x64.zip
 maestro-win-x64.zip
 ```
 
-Each archive includes the Symphony Maestro executable and required runtime assets:
+Each archive includes the Maestro executable and required runtime assets:
 
 ```text
 maestro executable
@@ -80,7 +80,7 @@ Windows PowerShell:
 .\maestro.exe
 ```
 
-You can also point Symphony Maestro at a specific settings file:
+You can also point Maestro at a specific settings file:
 
 ```bash
 ./maestro --config path/to/symphony.settings.json
@@ -106,7 +106,7 @@ Get-FileHash .\maestro-win-x64.zip -Algorithm SHA256
 
 ## Configuration
 
-Symphony Maestro uses `symphony.settings.json` to define model participants, integrators, prompts, colors, startup input, and CLI behavior.
+Maestro uses `symphony.settings.json` to define model participants, integrators, prompts, colors, startup input, and CLI behavior.
 
 The `Models` array has two groups:
 
@@ -124,6 +124,7 @@ Example:
         "Name": "gpt-5.2",
         "Endpoint": "https://api.openai.com/v1",
         "Credential": "env:OPENAI",
+        "Provider": "OpenAI",
         "SystemPrompt": "file:KM.Loom.Integrator.System.prompt",
         "Prompt": "file:KM.Loom.Integrator.Protocol.prompt",
         "Participating": false,
@@ -139,6 +140,7 @@ Example:
         "Name": "gpt-5.2",
         "Endpoint": "https://api.openai.com/v1",
         "Credential": "env:OPENAI",
+        "Provider": "OpenAI",
         "SystemPrompt": "file:KM.Loom.System.prompt",
         "Prompt": "file:KM.Loom.Protocol.prompt",
         "Participating": true,
@@ -187,8 +189,9 @@ The shortcut prefix is case-insensitive, so `ENV:OPENAI`, `env:OPENAI`, `KEY:...
 
 - `Alias`: Short name used in commands, for example `#gpt`. Aliases cannot use reserved special token names such as `date`, `models`, or `integrator`.
 - `Name`: Provider model name.
-- `Endpoint`: OpenAI-compatible endpoint URL.
+- `Endpoint`: Provider endpoint URL.
 - `Credential`: Either `env:VARIABLE_NAME` or `key:actual-api-key`.
+- `Provider`: Completion provider. Supported values are `OpenAI`, `OpenAICompatible`, `Anthropic`, and `GoogleGemini`. If omitted, Maestro defaults to `OpenAI`.
 - `SystemPrompt`: Prompt text or `file:template-name`.
 - `Prompt`: Protocol prompt text or `file:template-name`.
 - `Participating`: Whether the model starts active.
@@ -197,7 +200,7 @@ The shortcut prefix is case-insensitive, so `ENV:OPENAI`, `env:OPENAI`, `KEY:...
 
 Prompt files are resolved from the app's `PromptTemplates` folder when using `file:name`.
 
-At startup, Symphony runs a live preflight for participating chat models before showing the prompt. Models that fail startup are paused with a clear error. If an enabled integrator fails, normal member chat still starts, but integrator-only features such as synthesis, compaction, and admin mode remain unavailable until an integrator is enabled successfully.
+At startup, Maestro runs a live preflight for participating chat models before showing the prompt. Models that fail startup are paused with a clear error. If an enabled integrator fails, normal member chat still starts, but integrator-only features such as synthesis, compaction, and admin mode remain unavailable until an integrator is enabled successfully.
 
 ## Prompt Templates
 
@@ -261,7 +264,7 @@ Typing `...` expands to `continue`.
 
 ## URL Handling
 
-Maestro does not fetch webpage content from URLs automatically. OpenAI-compatible providers usually treat URLs as plain text, so reliable retrieval should be handled by Maestro middleware before content is injected into model context. Until that middleware is available, paste the relevant page text or attach a local extracted document.
+Maestro does not fetch webpage content from URLs automatically. Chat providers usually treat URLs as plain text, so reliable retrieval should be handled by Maestro middleware before content is injected into model context. Until that middleware is available, paste the relevant page text or attach a local extracted document.
 
 ## Commands
 
@@ -346,7 +349,7 @@ If a model hits a context limit, compact and retry:
 /retry #gpt
 ```
 
-When auto compaction is enabled and an integrator is active, Symphony will guide you to retry after the automatic compaction pass.
+When auto compaction is enabled and an integrator is active, Maestro will guide you to retry after the automatic compaction pass.
 
 ### Memory, Roles, and Artifacts
 
@@ -375,7 +378,7 @@ Memory and role information is inserted into future user turns.
 
 ### Attachments
 
-Attachments are experimental. OpenAI-compatible APIs do not standardize file, image, audio, and document semantics consistently across providers, so Maestro uses capability-gated delivery and clear warnings instead of assuming every model can receive every attachment.
+Attachments are experimental. Chat providers do not standardize file, image, audio, and document semantics consistently, so Maestro uses capability-gated delivery and clear warnings instead of assuming every model can receive every attachment.
 
 ```text
 /pwd
@@ -519,10 +522,10 @@ Then enable or retry:
 
 ## Support
 
-If Symphony cannot start, first check:
+If Maestro cannot start, first check:
 
 - `symphony.settings.json` exists next to the executable.
-- API key environment variables are set in the same shell used to launch Symphony.
+- API key environment variables are set in the same shell used to launch Maestro.
 - Model names, endpoints, and credentials match your provider.
 - At least one chat model is enabled.
 
