@@ -53,8 +53,8 @@ Each archive includes the Maestro executable and the required runtime assets:
 
 ```text
 maestro executable
-symphony.settings.json
-symphony.telemetry.settings.xml
+maestro.settings.json
+maestro.telemetry.settings.xml
 PromptTemplates/
 demo/
 README.md
@@ -64,7 +64,7 @@ README.md
 
 1. Download the release archive for your system.
 2. Extract the archive to a local folder.
-3. Open `symphony.settings.json` and configure your model providers, endpoints, and credentials.
+3. Open `maestro.settings.json` and configure your model providers, endpoints, and credentials.
 4. Set any environment variables referenced by `env:...` credentials. Environment variables are recommended for API keys.
 5. Run the `maestro` executable from the extracted folder.
 
@@ -83,7 +83,7 @@ Windows PowerShell:
 You can also point Maestro at a specific settings file:
 
 ```bash
-./maestro --config path/to/symphony.settings.json
+./maestro --config path/to/maestro.settings.json
 ```
 
 Keep `PromptTemplates/`, telemetry settings, and other bundled artifacts beside the executable unless you intentionally use `--config` with another settings folder.
@@ -106,7 +106,7 @@ Get-FileHash .\maestro-win-x64.zip -Algorithm SHA256
 
 ## Configuration
 
-Maestro uses `symphony.settings.json` to define model participants, integrators, providers, prompts, colors, startup input, and CLI behavior.
+Maestro uses `maestro.settings.json` to define model participants, integrators, providers, prompts, colors, startup input, and CLI behavior.
 
 The `Models` array has two groups:
 
@@ -169,7 +169,7 @@ export ANTHROPIC="your-anthropic-key"
 export GOOGLE="your-google-key"
 ```
 
-In `symphony.settings.json`, `Credential` supports two shortcut formats:
+In `maestro.settings.json`, `Credential` supports two shortcut formats:
 
 ```json
 "Credential": "env:OPENAI"
@@ -484,7 +484,7 @@ Each non-empty line is typed into Maestro as if a user entered it at the prompt.
 
 Maestro uses this subsystem for guided demos, but it is also a practical automation feature. A script can enable or disable models, switch modes, assign roles, attach context, navigate folders, load artifacts, run synthesis, export results, and then exit when the final scripted line completes.
 
-Typing speed for scripted input is controlled by `KeyRate` and `KeyDelay` in `symphony.settings.json`. `KeyRate` is the base per-character rhythm, while Maestro adds proportional pauses around spaces, punctuation, symbols, and sentence boundaries so automated sessions still feel readable and natural.
+Typing speed for scripted input is controlled by `KeyRate` and `KeyDelay` in `maestro.settings.json`. `KeyRate` is the base per-character rhythm, while Maestro adds proportional pauses around spaces, punctuation, symbols, and sentence boundaries so automated sessions still feel readable and natural.
 
 ## Troubleshooting
 
@@ -533,7 +533,7 @@ Then enable or retry:
 
 If Maestro cannot start, first check:
 
-- `symphony.settings.json` exists next to the executable.
+- `maestro.settings.json` exists next to the executable.
 - API key environment variables are set in the same shell used to launch Maestro.
 - Model names, endpoints, and credentials match your provider.
 - At least one chat model is enabled.
