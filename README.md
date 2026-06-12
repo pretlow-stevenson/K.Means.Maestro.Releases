@@ -55,6 +55,7 @@ Each archive includes the Maestro executable and the required runtime assets:
 maestro executable
 maestro.settings.json
 maestro.telemetry.settings.xml
+maestro.settings.schema.json
 PromptTemplates/
 demo/
 README.md
@@ -86,7 +87,15 @@ You can also point Maestro at a specific settings file:
 ./maestro --config path/to/maestro.settings.json
 ```
 
-Keep `PromptTemplates/`, telemetry settings, and other bundled artifacts beside the executable unless you intentionally use `--config` with another settings folder.
+Validate the install before a live session:
+
+```bash
+./maestro --version
+./maestro --doctor --config path/to/maestro.settings.json
+./maestro --validate-config --config path/to/maestro.settings.json
+```
+
+Keep `PromptTemplates/`, telemetry settings, schema, and other bundled artifacts beside the executable unless you intentionally use `--config` with another settings folder.
 
 ## Verify Downloads
 
@@ -211,6 +220,50 @@ Prompt files are resolved from Maestro's `PromptTemplates` folder when using `fi
 
 At startup, Maestro runs a live preflight for participating chat models before showing the prompt. Models that fail startup are paused with a clear error. If an enabled integrator fails, normal member chat still starts, but integrator-only features such as synthesis, compaction, and admin mode remain unavailable until an integrator is enabled successfully.
 
+## Enterprise Readiness
+
+Run `--doctor` before first use, after editing `maestro.settings.json`, and before sharing a release internally. It checks settings, model aliases, providers, endpoints, credential references, prompt files, input scripts, telemetry, logs, schema presence, compaction, attachment capability declarations, active models, integrator state, and proxy-related environment variables.
+
+Inside Maestro, use:
+
+```text
+/version
+/doctor
+/support bundle
+```
+
+`/support bundle` creates a sanitized ZIP under `logs/support/` unless you provide a path. It includes diagnostic metadata, redacted settings, and a redacted telemetry log tail when available. Review the bundle before sharing externally. It intentionally does not include chat transcripts, stash files, attached file contents, exported conversations, or prompt artifacts.
+
+### Exit Codes
+
+| Code | Meaning |
+| --- | --- |
+| `0` | Success. |
+| `1` | Diagnostic errors found by `--doctor` or `--validate-config`. |
+| `2` | Settings/configuration error before startup. |
+| `3` | Startup completed config load but no active member model was available. |
+| `10` | Reserved for unexpected startup/runtime failures. |
+
+### Release Smoke Tests
+
+If the release includes the `scripts/` folder, validate an extracted binary with:
+
+```bash
+scripts/smoke-test.sh ./maestro ./maestro.settings.json
+```
+
+```powershell
+.\scripts\smoke-test.ps1 -AppPath .\maestro.exe -ConfigPath .\maestro.settings.json
+```
+
+The smoke scripts run `--version` and `--doctor`. They expect required environment variables in `maestro.settings.json` to be set.
+
+### Corporate Networks and Proxies
+
+Maestro uses .NET HTTP clients and provider SDKs underneath the shared chat-completion layer. In managed networks, make sure outbound HTTPS is allowed to each configured provider endpoint. Standard proxy variables such as `HTTPS_PROXY`, `HTTP_PROXY`, and `NO_PROXY` are detected by diagnostics and are commonly honored by .NET networking, but provider-specific SDK behavior can vary.
+
+If your environment uses TLS inspection or private certificate authorities, validate trust at the OS/runtime level before starting Maestro. Use `--doctor` first, then run normal startup preflight to verify live provider access.
+
 ## Prompt Templates
 
 Prompt templates are critical runtime files. You can edit them, but changes can significantly alter model behavior or break Maestro's expected protocol. Keep backup copies before experimenting.
@@ -279,7 +332,7 @@ Maestro does not fetch webpage content from URLs automatically. Chat providers u
 
 Commands start with `/`.
 
-Use `/help` inside Maestro to see commands grouped by area. Use `/doctor` to check configuration, telemetry, model state, compaction settings, attachments, and artifacts.
+Use `/help` inside Maestro to see commands grouped by area. Use `/doctor` to check enterprise readiness and `/support bundle` to create a sanitized support package.
 In interactive sessions, use the up and down arrow keys to move through recent input history.
 
 ### Model Commands
@@ -306,7 +359,9 @@ Integrator commands use the same shape:
 
 ```text
 /status
+/version
 /doctor
+/support bundle
 /history
 /history #alias
 /history #alias 10
