@@ -134,8 +134,8 @@ Example:
         "Endpoint": "https://api.openai.com/v1",
         "Credential": "env:OPENAI",
         "Provider": "OpenAI",
-        "SystemPrompt": "file:KM.Loom.Integrator.System.prompt",
-        "Prompt": "file:KM.Loom.Integrator.Protocol.prompt",
+        "SystemPrompt": "file:KM.Maestro.Integrator.System.prompt",
+        "Prompt": "file:KM.Maestro.Integrator.Protocol.prompt",
         "Participating": false,
         "Capabilities": {
           "Attachments": "experimental"
@@ -150,8 +150,8 @@ Example:
         "Endpoint": "https://api.openai.com/v1",
         "Credential": "env:OPENAI",
         "Provider": "OpenAI",
-        "SystemPrompt": "file:KM.Loom.System.prompt",
-        "Prompt": "file:KM.Loom.Protocol.prompt",
+        "SystemPrompt": "file:KM.Maestro.System.prompt",
+        "Prompt": "file:KM.Maestro.Protocol.prompt",
         "Participating": true,
         "Capabilities": {
           "Attachments": "experimental"
