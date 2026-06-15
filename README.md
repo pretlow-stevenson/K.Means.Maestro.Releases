@@ -36,6 +36,20 @@ Binaries in this repository are provided for evaluation and use according to the
 
 Integrators are designed to function as unbiased observers. They do not actively participate as regular members in the multi-model chat context; instead, they watch from the operator layer and provide synthesis, voting, compaction, and private administrative reasoning when explicitly enabled.
 
+## Release Notes
+
+Current release summary:
+
+**K Means AI Maestro™ initial production release**
+
+- Terminal-native multi-model chat for OpenAI, OpenAI-compatible, Anthropic, and Google Gemini providers.
+- Private integrator layer for synthesis, voting, admin mode, and long-context compaction.
+- Polished console experience with startup preflight, Markdown rendering, model mention highlighting, command history, and safer terminal color fallback.
+- Session save/load, clean text and HTML export, diagnostics, support bundles, and release smoke-test scripts.
+- Experimental attachment handling with capability-gated delivery and clear user warnings.
+
+Each published GitHub release should include runtime-specific archives and matching checksums.
+
 ## Download
 
 Use the archive that matches your operating system and CPU architecture. Download the latest archive from this repository's GitHub Releases page.
