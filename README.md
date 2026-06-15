@@ -140,7 +140,7 @@ Example:
         "Capabilities": {
           "Attachments": "experimental"
         },
-        "ChatColor": "0;0;0"
+        "ChatColor": ""
       }
     ],
     [
@@ -156,7 +156,7 @@ Example:
         "Capabilities": {
           "Attachments": "experimental"
         },
-        "ChatColor": "0;0;0"
+        "ChatColor": "156;132;212"
       }
     ]
   ],
@@ -205,7 +205,7 @@ The shortcut prefix is case-insensitive, so `ENV:OPENAI`, `env:OPENAI`, `KEY:...
 - `Prompt`: Protocol prompt text or `file:template-name`.
 - `Participating`: Whether the model starts active.
 - `Capabilities.Attachments`: Native attachment capability for this model: `supported`, `partial`, `experimental`, or `unsupported`.
-- `ChatColor`: RGB terminal color string.
+- `ChatColor`: Optional RGB terminal color string such as `156;132;212`. Omit it or leave it blank to use the terminal's default foreground color. Invalid values are ignored. Avoid `0;0;0` unless your terminal uses a light background.
 
 Provider guidance:
 
@@ -294,7 +294,7 @@ List integrators:
 
 Type a message and press Enter. Active regular models respond in sequence, and Markdown-formatted output is rendered directly in the console.
 
-You can mention models by alias in your messages:
+You can mention models by alias in your messages. Model mentions such as `#gpt` are highlighted in model output when that model has a valid `ChatColor` configured:
 
 ```text
 What do you think about this plan, #gpt?
@@ -481,7 +481,7 @@ Convenience aliases:
 /load name
 ```
 
-Stashes and saved sessions restore the shared transcript, model histories across all groups, active model state, mode, memory, roles, artifacts, compaction settings, and pending attachment references. User turns with attachment content are preserved in model histories, so `.chat` files can contain encoded file content from attached turns.
+Stashes and saved sessions restore the shared transcript, model histories across all groups, active model state, mode, memory, roles, artifacts, and compaction settings. Pending attachment references are not restored automatically; reattach files intentionally after loading. User turns with attachment content are preserved in model histories, so `.chat` files can contain encoded file content from attached turns.
 
 Export shared conversation output:
 
