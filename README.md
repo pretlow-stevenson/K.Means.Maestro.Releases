@@ -177,7 +177,8 @@ Example:
   "Administrator": "you",
   "Verbosity": 1,
   "Cursor": "line",
-  "Prompt": " %"
+  "Prompt": " %",
+  "ConsoleVisuals": true
 }
 ```
 
@@ -231,6 +232,10 @@ Provider guidance:
 | `GoogleGemini` | Google Gemini models through the native Gemini provider path. |
 
 Prompt files are resolved from Maestro's `PromptTemplates` folder when using `file:name`.
+
+Top-level display setting:
+
+- `ConsoleVisuals`: Boolean setting for decorative console presentation such as startup mascot artwork. Missing or `false` hides the mascot and keeps the startup panel minimal.
 
 At startup, Maestro runs a live preflight for participating chat models before showing the prompt. Models that fail startup are paused with a clear error. If an enabled integrator fails, normal member chat still starts, but integrator-only features such as synthesis, compaction, and admin mode remain unavailable until an integrator is enabled successfully.
 
