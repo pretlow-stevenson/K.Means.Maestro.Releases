@@ -338,7 +338,7 @@ Typing `...` expands to `continue`.
 
 ## URL Handling
 
-Maestro does not fetch webpage content from URLs automatically. Chat providers usually treat URLs as plain text, so for reliable analysis you should paste reviewed page text into the chat or attach a local document only when the active providers support native attachments.
+Maestro does not fetch webpage content from URLs automatically. Chat providers usually treat URLs as plain text, so for reliable analysis you should paste reviewed page text into the chat or attach a local document only when the active providers support that native file type.
 
 ## Commands
 
@@ -454,7 +454,7 @@ Memory and role information is inserted into future user turns.
 
 ### Attachments
 
-Attachments are experimental. Maestro sends native attachment parts only when every active recipient uses a first-party provider with native attachment support: `OpenAI`, `Anthropic`, or `GoogleGemini`. `OpenAICompatible` providers do not receive attachments because compatible endpoints vary too widely to treat file handling as a stable contract.
+Attachments are experimental. Maestro sends native attachment parts only when every active recipient supports the specific pending file type. `OpenAICompatible` providers do not receive attachments because compatible endpoints vary too widely to treat file handling as a stable contract.
 
 ```text
 /pwd
@@ -471,10 +471,10 @@ Attachments are experimental. Maestro sends native attachment parts only when ev
 Attachments are included on the next user turn and then cleared after the turn.
 Relative attachment paths resolve from Maestro's file directory, which starts beside your active settings file. Use `/pwd` to show the current directory, `/cd` to change it, `/cd -` to return to the previous folder, and `/ls` to inspect files before attaching them.
 You can detach by full path, relative path, or by file name. Attachments are limited to 25 MB each.
-Supported types: `png`, `jpg`, `jpeg`, `gif`, `mp3`, `wav`, `pdf`, `doc`, `docx`, `txt`, `md`, `markdown`, `csv`, `json`, and `log`.
+Recognized types: `png`, `jpg`, `jpeg`, `gif`, `mp3`, `wav`, `pdf`, `doc`, `docx`, `txt`, `md`, `markdown`, `csv`, `json`, and `log`.
 Review files before attaching them. Attached content is sent to the configured providers and may contain untrusted instructions or sensitive data.
 
-Maestro chooses one delivery mode for all active recipients. If any active recipient uses `OpenAICompatible`, the attachment turn is blocked with a clear message. Maestro does not automatically extract text from files or inject file content as prompt text; paste reviewed file content yourself when that is the safer workflow.
+Maestro chooses one delivery mode for all active recipients. Native delivery is currently enabled only when every active recipient supports the pending type. Images and PDFs are the safest cross-provider path; text-like documents depend on the active provider mix. Audio and Office documents remain blocked until provider mappings are explicitly verified. Maestro does not automatically extract text from files or inject file content as prompt text; paste reviewed file content yourself when that is the safer workflow.
 
 ### Save, Restore, and Export
 
