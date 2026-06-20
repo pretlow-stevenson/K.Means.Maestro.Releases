@@ -46,7 +46,7 @@ Current release summary:
 - Private integrator layer for synthesis, voting, admin mode, and long-context compaction.
 - Polished console experience with startup preflight, Markdown rendering, model mention highlighting, command history, and safer terminal color fallback.
 - Session save/load, clean text and HTML export, diagnostics, support bundles, and release smoke-test scripts.
-- Experimental attachment handling with capability-gated delivery and clear user warnings.
+- Experimental attachment handling with provider-defined delivery and clear user warnings.
 
 Each published GitHub release should include runtime-specific archives and matching checksums.
 
@@ -151,9 +151,6 @@ Example:
         "SystemPrompt": "file:KM.Maestro.Integrator.System.prompt",
         "Prompt": "file:KM.Maestro.Integrator.Protocol.prompt",
         "Participating": false,
-        "Capabilities": {
-          "Attachments": "experimental"
-        },
         "ChatColor": ""
       }
     ],
@@ -167,9 +164,6 @@ Example:
         "SystemPrompt": "file:KM.Maestro.System.prompt",
         "Prompt": "file:KM.Maestro.Protocol.prompt",
         "Participating": true,
-        "Capabilities": {
-          "Attachments": "experimental"
-        },
         "ChatColor": "156;132;212"
       }
     ]
@@ -219,7 +213,6 @@ The shortcut prefix is case-insensitive, so `ENV:OPENAI`, `env:OPENAI`, `KEY:...
 - `SystemPrompt`: Prompt text or `file:template-name`.
 - `Prompt`: Protocol prompt text or `file:template-name`.
 - `Participating`: Whether the model starts active.
-- `Capabilities.Attachments`: Native attachment capability for this model: `supported`, `partial`, `experimental`, or `unsupported`.
 - `ChatColor`: Optional RGB terminal color string such as `156;132;212`. Omit it or leave it blank to use the terminal's default foreground color. Invalid values are ignored. Avoid `0;0;0` unless your terminal uses a light background.
 
 Provider guidance:
@@ -241,7 +234,7 @@ At startup, Maestro runs a live preflight for participating chat models before s
 
 ## Enterprise Readiness
 
-Run `--doctor` before first use, after editing `maestro.settings.json`, and before sharing a release internally. It checks settings, model aliases, providers, endpoints, credential references, prompt files, input scripts, telemetry, logs, schema presence, compaction, attachment capability declarations, active models, integrator state, and proxy-related environment variables.
+Run `--doctor` before first use, after editing `maestro.settings.json`, and before sharing a release internally. It checks settings, model aliases, providers, endpoints, credential references, prompt files, input scripts, telemetry, logs, schema presence, compaction, removed attachment capability settings, active models, integrator state, and proxy-related environment variables.
 
 Inside Maestro, use:
 
@@ -345,7 +338,7 @@ Typing `...` expands to `continue`.
 
 ## URL Handling
 
-Maestro does not fetch webpage content from URLs automatically. Chat providers usually treat URLs as plain text, so for reliable analysis you should paste the relevant page text or attach a local extracted document.
+Maestro does not fetch webpage content from URLs automatically. Chat providers usually treat URLs as plain text, so for reliable analysis you should paste reviewed page text into the chat or attach a local document only when the active providers support native attachments.
 
 ## Commands
 
@@ -461,7 +454,7 @@ Memory and role information is inserted into future user turns.
 
 ### Attachments
 
-Attachments are experimental. Chat providers do not standardize file, image, audio, and document semantics consistently, so Maestro uses capability-gated delivery and clear warnings instead of assuming every model can receive every attachment.
+Attachments are experimental. Maestro sends native attachment parts only when every active recipient uses a first-party provider with native attachment support: `OpenAI`, `Anthropic`, or `GoogleGemini`. `OpenAICompatible` providers do not receive attachments because compatible endpoints vary too widely to treat file handling as a stable contract.
 
 ```text
 /pwd
@@ -479,8 +472,9 @@ Attachments are included on the next user turn and then cleared after the turn.
 Relative attachment paths resolve from Maestro's file directory, which starts beside your active settings file. Use `/pwd` to show the current directory, `/cd` to change it, `/cd -` to return to the previous folder, and `/ls` to inspect files before attaching them.
 You can detach by full path, relative path, or by file name. Attachments are limited to 25 MB each.
 Supported types: `png`, `jpg`, `jpeg`, `gif`, `mp3`, `wav`, `pdf`, `doc`, `docx`, `txt`, `md`, `markdown`, `csv`, `json`, and `log`.
+Review files before attaching them. Attached content is sent to the configured providers and may contain untrusted instructions or sensitive data.
 
-Maestro chooses one delivery mode for all active recipients. It sends native attachment parts only when active model capabilities allow it, falls back to shared text context when equivalent text can be extracted, and blocks the turn when the attachment cannot be shared fairly across active models.
+Maestro chooses one delivery mode for all active recipients. If any active recipient uses `OpenAICompatible`, the attachment turn is blocked with a clear message. Maestro does not automatically extract text from files or inject file content as prompt text; paste reviewed file content yourself when that is the safer workflow.
 
 ### Save, Restore, and Export
 
